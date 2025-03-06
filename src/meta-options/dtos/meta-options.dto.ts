@@ -6,7 +6,7 @@ export class MetaOptionsDto {
     example:
       '{\r\n "@context": "https:\/\/schema.org", \r\n "@type": "Person"\r\n}',
     description:
-      'Serialize your JSON object else a validation error will be thrown',
+      'Serialize your JSON object else a validation error will be thrown.',
   })
   @IsNotEmpty()
   @IsJSON()
