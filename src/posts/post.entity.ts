@@ -1,4 +1,10 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { PostType } from './enums/post-type.enum';
 import { Status } from './enums/status.enum';
 import { MetaOption } from '../meta-options/meta-option.entity';
@@ -34,7 +40,7 @@ export class Post {
   @Column({ type: 'timestamp' /** 'datetime' in MySQL */, nullable: true })
   publishOn?: Date;
   tags?: string[];
-  @OneToOne(() => MetaOption)
+  @OneToOne(() => MetaOption, { cascade: true, eager: true })
   @JoinColumn()
   metaOption?: MetaOption;
 }

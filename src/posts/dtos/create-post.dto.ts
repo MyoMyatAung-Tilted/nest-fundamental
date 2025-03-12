@@ -107,27 +107,11 @@ export class CreatePostDto {
   tags?: string[];
 
   @ApiPropertyOptional({
-    type: 'array',
+    type: MetaOptionsDto,
     required: false,
-    items: {
-      type: 'object',
-      properties: {
-        key: {
-          type: 'string',
-          description: 'Key of the meta option',
-          example: 'emailNotiEnable',
-        },
-        value: {
-          type: 'any',
-          description: 'Value of the meta option',
-          example: true,
-        },
-      },
-    },
   })
   @IsOptional()
-  @IsArray()
   @ValidateNested({ each: true })
   @Type(() => MetaOptionsDto)
-  metaOptions?: MetaOptionsDto[];
+  metaOption?: MetaOptionsDto | null;
 }

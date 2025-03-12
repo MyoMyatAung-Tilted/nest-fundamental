@@ -1,25 +1,61 @@
 import { Injectable } from '@nestjs/common';
-import { UserService } from '../../users/providers/user.service';
+import { CreatePostDto } from '../dtos/create-post.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Post } from '../post.entity';
+import { Repository } from 'typeorm';
+import { MetaOption } from '../../meta-options/meta-option.entity';
 
+/**
+ * Class to connect to Post table and perform business operation
+ */
 @Injectable()
 export class PostsService {
-  constructor(private readonly usersServices: UserService) {}
+  /**
+   * Constructor
+   * @param postRepository
+   * @param metaOptionsRepository
+   * @constructor
+   */
+  constructor(
+    /**
+     * Inject Post Repository
+     */
+    @InjectRepository(Post)
+    private readonly postRepository: Repository<Post>,
+    /**
+     * Inject MetaOption Repository
+     */
+    @InjectRepository(MetaOption)
+    private readonly metaOptionsRepository: Repository<MetaOption>,
+  ) {}
 
-  public findAll(userId: string) {
-    const user = this.usersServices.findById(userId);
-    return [
-      {
-        user,
-        title: 'Hello World',
-        description:
-          'The command query responsibility segregation (CQRS) pattern separates the data mutation, or the command part of a system, from the query part',
-      },
-      {
-        user,
-        title: 'Hello World 1',
-        description:
-          'The command query responsibility segregation (CQRS) pattern separates the data mutation, or the command part of a system, from the query part',
-      },
-    ];
+  /**
+   * Create a new post
+   * @param createPostDto
+   * @return Promise<Post>
+   */
+  public async create(createPostDto: CreatePostDto) {
+    // Create Post
+    const post = this.postRepository.create(createPostDto);
+    // Return the post
+    return await this.postRepository.save(post);
+  }
+
+  /**
+   * Find all posts
+   */
+  public async findAll() {
+    return await this.postRepository.find({ relations: { metaOption: true } });
+  }
+
+  /**
+   * Delete Post by ID
+   * @param {number} id
+   */
+  public async delete(id: number) {
+    const post = await this.postRepository.findOneBy({ id });
+    await this.postRepository.delete(id);
+    await this.metaOptionsRepository.delete(post.metaOption.id);
+    return { deleted: true };
   }
 }
