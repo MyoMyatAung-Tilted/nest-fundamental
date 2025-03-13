@@ -8,9 +8,8 @@ export class AuthService {
     private readonly usersService: UserService,
   ) {}
 
-  public login(email: string, password: string, id: string) {
-    const user = this.usersService.findById(id);
-    return { ...user, email, password, token: 'SAMPLE_TOKEN' };
+  public login(email: string, password: string) {
+    return { email, password, token: 'SAMPLE_TOKEN' };
   }
 
   public isAuth() {

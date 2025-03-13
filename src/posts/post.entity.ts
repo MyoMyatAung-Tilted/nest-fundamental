@@ -1,13 +1,14 @@
 import {
   Column,
   Entity,
-  JoinColumn,
   OneToOne,
   PrimaryGeneratedColumn,
+  ManyToOne,
 } from 'typeorm';
 import { PostType } from './enums/post-type.enum';
 import { Status } from './enums/status.enum';
 import { MetaOption } from '../meta-options/meta-option.entity';
+import { User } from '../users/user.entity';
 
 @Entity()
 export class Post {
@@ -39,8 +40,12 @@ export class Post {
   featureImageUrl?: string;
   @Column({ type: 'timestamp' /** 'datetime' in MySQL */, nullable: true })
   publishOn?: Date;
+  @ManyToOne(() => User, (user) => user.posts)
+  author: User;
   tags?: string[];
-  @OneToOne(() => MetaOption, { cascade: true, eager: true })
-  @JoinColumn()
+  @OneToOne(() => MetaOption, (metaOption) => metaOption.post, {
+    cascade: true,
+    eager: true,
+  })
   metaOption?: MetaOption;
 }

@@ -46,7 +46,7 @@ export class UsersController {
   public getAllUsers(
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
     @Query('offset', new DefaultValuePipe(1), ParseIntPipe) offset: number,
-  ): Array<{ firstName: string; email: string }> {
+  ) {
     return this.userService.findAll({ limit, offset });
   }
   @Get(':id')

@@ -23,16 +23,10 @@ export class AuthController {
    */
   @Post('login')
   login(@Body() loginDto: LoginDto): {
-    id: string;
-    firstName: string;
     email: string;
     password: string;
     token: string;
   } {
-    return this.authService.login(
-      loginDto.email,
-      loginDto.password,
-      loginDto.id,
-    );
+    return this.authService.login(loginDto.email, loginDto.password);
   }
 }
