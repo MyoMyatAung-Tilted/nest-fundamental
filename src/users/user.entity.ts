@@ -13,6 +13,6 @@ export class User {
   email: string;
   @Column({ type: 'varchar', length: 96, nullable: false })
   password: string;
-  @OneToMany(() => Post, (post) => post.author, { eager: true })
+  @OneToMany(() => Post, (post) => post.author)
   posts: Post[];
 }

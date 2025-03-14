@@ -98,14 +98,13 @@ export class CreatePostDto {
   publishOn?: Date;
 
   @ApiPropertyOptional({
-    example: ['Chrome', 'Incognito'],
-    description: 'Tags of the post.',
+    example: [1, 3],
+    description: 'Ids of the Tags of the post.',
   })
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
-  @MinLength(3, { each: true })
-  tags?: string[];
+  @IsInt({ each: true })
+  tags?: number[];
 
   @ApiPropertyOptional({
     type: MetaOptionsDto,
