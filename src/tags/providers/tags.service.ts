@@ -39,4 +39,22 @@ export class TagsService {
   public async findMany(tags: number[]) {
     return await this.tagRepository.find({ where: { id: In(tags) } });
   }
+
+  /**
+   * Delete a tag
+   * @param tag
+   */
+  public async delete(tag: number) {
+    await this.tagRepository.delete(tag);
+    return { deleted: true, tag };
+  }
+
+  /**
+   * Soft delete a tag
+   * @param tag
+   */
+  public async softDelete(tag: number) {
+    await this.tagRepository.softDelete(tag);
+    return { deleted: true, tag };
+  }
 }
