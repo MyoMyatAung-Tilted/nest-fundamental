@@ -15,6 +15,7 @@ import { PatchUserDto } from './dtos/patch-user.dto';
 import { UserService } from './providers/user.service';
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { User } from './user.entity';
+import { CreateManyUsersDto } from './dtos/create-many-users.dto';
 
 @Controller('users')
 @ApiTags('Users')
@@ -61,6 +62,17 @@ export class UsersController {
   @Post()
   public createUser(@Body() createUserDto: CreateUserDto): Promise<User> {
     return this.userService.create(createUserDto);
+  }
+  @ApiOperation({ summary: 'Create many users endpoint' })
+  @ApiResponse({
+    status: 201,
+    description: 'The users are successfully created',
+  })
+  @ApiResponse({ status: 500, description: 'Internal Server Error' })
+  @ApiResponse({ status: 400, description: 'Bad Request' })
+  @Post('create-many')
+  public createManyUser(@Body() createManyUsersDto: CreateManyUsersDto) {
+    return this.userService.createMany(createManyUsersDto);
   }
   @Patch(':id')
   public updateUser(

@@ -11,6 +11,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import profileConfig from '../config/profile.config';
 import { ConfigType } from '@nestjs/config';
+import { CreateManyUsersDto } from '../dtos/create-many-users.dto';
+import { UsersCreateManyProvider } from './users-create-many.provider';
 
 /**
  * Class to connect to User table and perform business operation
@@ -22,12 +24,14 @@ export class UserService {
    * @constructor
    * @param {Repository<User>} userRepository
    * @param profileConfiguration
+   * @param usersCreateManyProvider
    * */
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     @Inject(profileConfig.KEY)
     private readonly profileConfiguration: ConfigType<typeof profileConfig>,
+    private readonly usersCreateManyProvider: UsersCreateManyProvider,
   ) {}
   /** DUMMY QUERY */
   private _query: GetUserQueryDto;
@@ -91,5 +95,13 @@ export class UserService {
    */
   public async findOneById(id: number) {
     return this.userRepository.findOneBy({ id });
+  }
+
+  /**
+   * Create many users
+   * @param createManyUsersDto
+   */
+  public async createMany(createManyUsersDto: CreateManyUsersDto) {
+    return await this.usersCreateManyProvider.createMany(createManyUsersDto);
   }
 }
