@@ -43,7 +43,7 @@ export class Post {
   featureImageUrl?: string;
   @Column({ type: 'timestamp' /** 'datetime' in MySQL */, nullable: true })
   publishOn?: Date;
-  @ManyToOne(() => User, (user) => user.posts)
+  @ManyToOne(() => User, (user) => user.posts, { eager: true })
   author: User;
   @ManyToMany(() => Tag, (tag) => tag.posts, { eager: true })
   @JoinTable()

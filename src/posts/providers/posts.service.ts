@@ -11,6 +11,8 @@ import { MetaOption } from '../../meta-options/meta-option.entity';
 import { UserService } from '../../users/providers/user.service';
 import { TagsService } from '../../tags/providers/tags.service';
 import { PatchPostDto } from '../dtos/patch-post.dto';
+import { PaginationProvider } from '../../common/pagination/providers/pagination.provider';
+import { GetPostDto } from '../dtos/get-post.dto';
 
 /**
  * Class to connect to Post table and perform business operation
@@ -23,6 +25,7 @@ export class PostsService {
    * @param metaOptionsRepository
    * @param userService
    * @param tagsService
+   * @param paginationProvider
    * @constructor
    */
   constructor(
@@ -44,6 +47,8 @@ export class PostsService {
      * Inject Tag Service
      */
     private readonly tagsService: TagsService,
+
+    private readonly paginationProvider: PaginationProvider,
   ) {}
 
   /**
@@ -65,10 +70,14 @@ export class PostsService {
   /**
    * Find all posts
    */
-  public async findAll() {
-    return await this.postRepository.find({
-      relations: { metaOption: true, author: true, tags: true },
-    });
+  public async findAll(postQuery: GetPostDto) {
+    return await this.paginationProvider.paginateQuery(
+      { limit: postQuery.limit, page: postQuery.page },
+      this.postRepository,
+    );
+    // return await this.postRepository.find({
+    //   relations: { tags: true, author: true },
+    // });
   }
 
   /**

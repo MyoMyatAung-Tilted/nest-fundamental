@@ -8,20 +8,25 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { PostsService } from './providers/posts.service';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreatePostDto } from './dtos/create-post.dto';
 import { PatchPostDto } from './dtos/patch-post.dto';
+import { GetPostDto } from './dtos/get-post.dto';
 
 @Controller('posts')
 @ApiTags('Posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
-  @Get()
-  public findAll() {
-    return this.postsService.findAll();
+  @Get('/:userId?')
+  public findAll(
+    @Param('userId') userId: string,
+    @Query() postQuery: GetPostDto,
+  ) {
+    return this.postsService.findAll(postQuery);
   }
 
   @ApiOperation({ summary: 'Create Blog Post Endpoint' })
