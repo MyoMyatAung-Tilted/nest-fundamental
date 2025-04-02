@@ -10,7 +10,7 @@ import {
  * Data transfer object for user login
  * @class
  */
-export class LoginDto {
+export class SignInDto {
   /**
    * User's email address
    * @type {string}
@@ -34,13 +34,4 @@ export class LoginDto {
     },
   )
   password: string;
-
-  /**
-   * User's ID
-   * @type {string}
-   */
-  @IsString()
-  @IsNotEmpty()
-  @MinLength(3)
-  id: string;
 }

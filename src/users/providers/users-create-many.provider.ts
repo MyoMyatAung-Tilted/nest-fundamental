@@ -1,11 +1,14 @@
 import {
   ConflictException,
+  forwardRef,
+  Inject,
   Injectable,
   RequestTimeoutException,
 } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import { CreateManyUsersDto } from '../dtos/create-many-users.dto';
 import { User } from '../user.entity';
+import { HashingProvider } from '../../auth/providers/hashing.provider';
 
 /**
  * Provider class to create many users
@@ -16,6 +19,7 @@ export class UsersCreateManyProvider {
   /**
    * Constructor to inject the dependencies
    * @param dataSource
+   * @param hashingProvider
    * @constructor
    */
   constructor(
@@ -23,6 +27,9 @@ export class UsersCreateManyProvider {
      * Inject the Datasource
      */
     private readonly dataSource: DataSource,
+
+    @Inject(forwardRef(() => HashingProvider))
+    private readonly hashingProvider: HashingProvider,
   ) {}
 
   /**
@@ -48,7 +55,10 @@ export class UsersCreateManyProvider {
 
     try {
       for (const user of createManyUsersDto.users) {
-        const newUser = queryRunner.manager.create(User, user);
+        const newUser = queryRunner.manager.create(User, {
+          ...user,
+          password: await this.hashingProvider.hashPassword(user.password),
+        });
         const result = await queryRunner.manager.save(newUser);
         users.push(result);
       }

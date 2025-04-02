@@ -1,6 +1,6 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { AuthService } from './providers/auth.service';
-import { LoginDto } from './dtos/login.dto';
+import { SignInDto } from './dtos/sign-in.dto';
 import { ApiTags } from '@nestjs/swagger';
 
 /**
@@ -17,16 +17,12 @@ export class AuthController {
    */
   constructor(private readonly authService: AuthService) {}
   /**
-   * Handles user login
-   * @param {LoginDto} loginDto - Data transfer object for login
-   * @returns {Promise<{ email: string; password: string; token: string; id: string; firstName: string; }>} - The result of the login operation
+   * Handles user sign in
+   * @param {SignInDto} signInDto - Data transfer object for sign in
    */
-  @Post('login')
-  login(@Body() loginDto: LoginDto): {
-    email: string;
-    password: string;
-    token: string;
-  } {
-    return this.authService.login(loginDto.email, loginDto.password);
+  @Post('sign-in')
+  @HttpCode(HttpStatus.OK)
+  signIn(@Body() signInDto: SignInDto) {
+    return this.authService.signIn(signInDto);
   }
 }
