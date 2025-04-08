@@ -42,8 +42,6 @@ export class UserService {
    * */
   public async findAll(query: GetUserQueryDto) {
     // Testing profileConfiguration
-    console.log(this.profileConfiguration);
-    console.log(this.profileConfiguration.apiKey);
     this._query = query;
     return await this.userRepository.find();
   }

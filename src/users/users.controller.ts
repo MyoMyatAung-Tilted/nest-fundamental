@@ -1,14 +1,13 @@
 import {
-  Controller,
-  Get,
-  Post,
-  Patch,
-  Param,
-  Query,
   Body,
+  Controller,
   DefaultValuePipe,
+  Get,
+  Param,
   ParseIntPipe,
-  UseGuards,
+  Patch,
+  Post,
+  Query,
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { GetUserParamsDto } from './dtos/get-user.dto';
@@ -17,7 +16,6 @@ import { UserService } from './providers/user.service';
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { User } from './user.entity';
 import { CreateManyUsersDto } from './dtos/create-many-users.dto';
-import { AccessTokenGuard } from '../auth/guards/access-token/access-token.guard';
 
 @Controller('users')
 @ApiTags('Users')
@@ -72,7 +70,6 @@ export class UsersController {
   })
   @ApiResponse({ status: 500, description: 'Internal Server Error' })
   @ApiResponse({ status: 400, description: 'Bad Request' })
-  @UseGuards(AccessTokenGuard)
   @Post('create-many')
   public createManyUser(@Body() createManyUsersDto: CreateManyUsersDto) {
     return this.userService.createMany(createManyUsersDto);
