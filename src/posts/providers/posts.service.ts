@@ -13,6 +13,8 @@ import { TagsService } from '../../tags/providers/tags.service';
 import { PatchPostDto } from '../dtos/patch-post.dto';
 import { PaginationProvider } from '../../common/pagination/providers/pagination.provider';
 import { GetPostDto } from '../dtos/get-post.dto';
+import { ActiveUserData } from '../../auth/interfaces/active-user-data.interface';
+import { CreatePostProvider } from './create-post.provider';
 
 /**
  * Class to connect to Post table and perform business operation
@@ -26,6 +28,7 @@ export class PostsService {
    * @param userService
    * @param tagsService
    * @param paginationProvider
+   * @param createPostProvider
    * @constructor
    */
   constructor(
@@ -48,23 +51,25 @@ export class PostsService {
      */
     private readonly tagsService: TagsService,
 
+    /**
+     * Inject Pagination Provider
+     */
     private readonly paginationProvider: PaginationProvider,
+
+    /**
+     * Inject Create Post Provider
+     */
+    private readonly createPostProvider: CreatePostProvider,
   ) {}
 
   /**
    * Create a new post
    * @param createPostDto
+   * @param user
    * @return Promise<Post>
    */
-  public async create(createPostDto: CreatePostDto) {
-    // find author
-    const author = await this.userService.findOneById(createPostDto.authorId);
-    // find tags
-    const tags = await this.tagsService.findMany(createPostDto.tags);
-    // Create Post
-    const post = this.postRepository.create({ ...createPostDto, tags, author });
-    // Return the post
-    return await this.postRepository.save(post);
+  public async create(createPostDto: CreatePostDto, user: ActiveUserData) {
+    return await this.createPostProvider.create(createPostDto, user);
   }
 
   /**

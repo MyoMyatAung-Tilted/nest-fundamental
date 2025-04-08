@@ -15,6 +15,8 @@ import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreatePostDto } from './dtos/create-post.dto';
 import { PatchPostDto } from './dtos/patch-post.dto';
 import { GetPostDto } from './dtos/get-post.dto';
+import { ActiveUserData } from '../auth/interfaces/active-user-data.interface';
+import { ActiveUser } from '../auth/decorators/active-user.decorator';
 
 @Controller('posts')
 @ApiTags('Posts')
@@ -32,8 +34,11 @@ export class PostsController {
   @ApiOperation({ summary: 'Create Blog Post Endpoint' })
   @ApiResponse({ status: 201, description: 'The post is successfully created' })
   @Post()
-  public createPost(@Body() createPostDto: CreatePostDto) {
-    return this.postsService.create(createPostDto);
+  public createPost(
+    @Body() createPostDto: CreatePostDto,
+    @ActiveUser() user: ActiveUserData,
+  ) {
+    return this.postsService.create(createPostDto, user);
   }
 
   @ApiOperation({ summary: 'Patch Blog Post Endpoint' })
