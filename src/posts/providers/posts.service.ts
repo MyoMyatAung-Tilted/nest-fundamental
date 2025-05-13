@@ -79,10 +79,10 @@ export class PostsService {
     return await this.paginationProvider.paginateQuery(
       { limit: postQuery.limit, page: postQuery.page },
       this.postRepository,
+      {
+        relations: { tags: true, author: true },
+      },
     );
-    // return await this.postRepository.find({
-    //   relations: { tags: true, author: true },
-    // });
   }
 
   /**

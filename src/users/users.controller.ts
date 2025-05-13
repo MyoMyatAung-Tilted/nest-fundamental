@@ -1,5 +1,6 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   DefaultValuePipe,
   Get,
@@ -8,6 +9,7 @@ import {
   Patch,
   Post,
   Query,
+  UseInterceptors,
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { GetUserParamsDto } from './dtos/get-user.dto';
@@ -16,6 +18,8 @@ import { UserService } from './providers/user.service';
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { User } from './user.entity';
 import { CreateManyUsersDto } from './dtos/create-many-users.dto';
+import { Auth } from '../auth/decorators/auth.decorator';
+import { AuthType } from '../auth/enums/auth-type.enum';
 
 @Controller('users')
 @ApiTags('Users')
@@ -60,6 +64,8 @@ export class UsersController {
   @ApiResponse({ status: 500, description: 'Internal Server Error' })
   @ApiResponse({ status: 400, description: 'Bad Request' })
   @Post()
+  @Auth(AuthType.None)
+  @UseInterceptors(ClassSerializerInterceptor)
   public createUser(@Body() createUserDto: CreateUserDto): Promise<User> {
     return this.userService.create(createUserDto);
   }

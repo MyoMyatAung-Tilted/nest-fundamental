@@ -11,6 +11,12 @@ import { ActiveUserData } from '../interfaces/active-user-data.interface';
  */
 @Injectable()
 export class GenerateTokenProvider {
+  @Inject(jwtConfig.KEY)
+  /**
+   * Inject JWT configuration
+   */
+  private readonly jwtConfiguration: ConfigType<typeof jwtConfig>;
+
   /**
    * Constructor for generate token
    * @param jwtService
@@ -23,11 +29,10 @@ export class GenerateTokenProvider {
      */
     private readonly jwtService: JwtService,
     @Inject(jwtConfig.KEY)
-    /**
-     * Inject JWT configuration
-     */
-    private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
-  ) {}
+    jwtConfiguration: ConfigType<typeof jwtConfig>,
+  ) {
+    this.jwtConfiguration = jwtConfiguration;
+  }
 
   /**
    * Method for sign token
