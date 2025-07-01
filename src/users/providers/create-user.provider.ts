@@ -10,6 +10,7 @@ import { CreateUserDto } from '../dtos/create-user.dto';
 import { Repository } from 'typeorm';
 import { User } from '../user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { MailService } from '../../mail/providers/mail.service';
 
 @Injectable()
 export class CreateUserProvider {
@@ -19,6 +20,7 @@ export class CreateUserProvider {
 
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    private readonly mailService: MailService,
   ) {}
 
   public async createUser(createUserDto: CreateUserDto) {
@@ -50,6 +52,18 @@ export class CreateUserProvider {
         'Unable to process your request at the moment please try later',
         {
           description: 'Error connecting to the the datbase',
+        },
+      );
+    }
+
+    try {
+      await this.mailService.sendUserWelcomeEmail(newUser);
+    } catch (error) {
+      console.error(error);
+      throw new RequestTimeoutException(
+        'Unable to process your request at the moment please try later',
+        {
+          description: 'Error sending welcome email',
         },
       );
     }
